@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import {random} from 'mathjs'
 
+const Button = ({ handleClick, buttonText }) => {
+  return (
+    <button onClick={handleClick}>
+      {buttonText}
+    </button>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -12,22 +20,34 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
   const [selected, setSelected] = useState(0)
   const maxIndex = anecdotes.length - 1
 
-  const handleClick = () => {
+  const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
+  const [displayVotes, setDisplayVotes] = useState(votes[selected])
+  console.log(votes)
+
+  const randomAnecdote = () => {
     const randomIndex = Math.round(Math.random() * maxIndex, 0)
     setSelected(randomIndex)
+    setDisplayVotes(votes[randomIndex])
+  }
+
+  const voteAnecdote = () => {
+    const arr = votes
+    arr[selected] += 1
+    setVotes(arr)
+    setDisplayVotes(arr[selected])
   }
 
   return (
     <div>
-      {anecdotes[selected]}
+      {anecdotes[selected]}<br />
+      has {displayVotes} votes
+
       <p>
-        <button onClick={handleClick}>
-          next anecdote
-        </button>
+        <Button handleClick={voteAnecdote} buttonText='vote' />
+        <Button handleClick={randomAnecdote} buttonText='next anecdote' />
       </p>
     </div>
   )
