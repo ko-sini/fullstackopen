@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import {random} from 'mathjs'
+import {random, round, max} from 'mathjs'
 
 const Button = ({ handleClick, buttonText }) => {
   return (
@@ -25,7 +25,6 @@ const App = () => {
 
   const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
   const [displayVotes, setDisplayVotes] = useState(votes[selected])
-  console.log(votes)
 
   const randomAnecdote = () => {
     const randomIndex = Math.round(Math.random() * maxIndex, 0)
@@ -40,8 +39,14 @@ const App = () => {
     setDisplayVotes(arr[selected])
   }
 
+  const getTopAnecdote = () => {
+    const idx = votes.indexOf(Math.max(...votes))
+    return (anecdotes[idx])
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}<br />
       has {displayVotes} votes
 
@@ -49,6 +54,9 @@ const App = () => {
         <Button handleClick={voteAnecdote} buttonText='vote' />
         <Button handleClick={randomAnecdote} buttonText='next anecdote' />
       </p>
+
+      <h1>Anecdote with most votes</h1>
+      {getTopAnecdote()}
     </div>
   )
 }
